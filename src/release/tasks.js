@@ -20,7 +20,7 @@ function push(branch, tags) {
   });
 }
 
-function commitFiles(files, message) {
+function commitFiles(branch, files, message) {
   log(`Committing ${files}: ${message}`);
 
   return streamToPromise(
