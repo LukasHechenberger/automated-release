@@ -122,7 +122,7 @@ export function release(options) {
           resolve();
         }
       });
-    })
+    }))
     .then(b => (branch = b))
     .then(() => changelog())
     .then(() => add(options.addFiles, true))
