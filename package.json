@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "stream-to-promise": "^2.2.0",
     "yargs": "^6.6.0"
   },
   "babel": {
