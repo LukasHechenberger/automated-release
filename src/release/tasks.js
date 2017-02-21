@@ -106,8 +106,6 @@ function checkout(branch) {
 export function release(options) {
   let branch;
 
-  console.log(options);
-
   return checkStatus()
     .then(() => getBranch())
     .then(b => (branch = b))
