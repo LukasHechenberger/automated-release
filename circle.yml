@@ -14,4 +14,7 @@ deployment:
   staging:
     branch: [master, next]
     commands:
+      - git config user.email "admin@ls-age.com"
+      - git config user.name "LukasHechenberger"
+      - echo -e "$NPM_USER\n$NPM_PASS\n$NPM_EMAIL" | npm login
       - node ./out/bin/automated-release.js --add-files out
