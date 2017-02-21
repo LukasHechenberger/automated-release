@@ -120,7 +120,7 @@ export function release(options) {
     .then(() => new Promise((resolve, reject) => {
       log('check tag');
 
-      git.revParse({ args: `v${options.package.version}`, quiet: true }, (err, out) => {
+      git.revParse({ args: `v${options.package.version}`, quiet: true }, err => {
         if (err) {
           resolve();
         } else {
