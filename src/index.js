@@ -2,14 +2,35 @@ import { join } from 'path';
 import { readFile } from 'fs';
 import yargs from 'yargs';
 import axios from 'axios';
-import * as tasks from './tasks';
+import * as tasks from './release/tasks';
+import options from './cli/options';
+
+export const Command = {
+  Release: 'Release',
+  Autorelease: 'Autorelease',
+};
 
 export default class AutomatedRelease {
 
+  static get defaultOptions() {
+    return {
+      addFiles: ['out', 'docs/api'],
+    };
+  }
+
   constructor(args) {
-    const options = yargs(args);
+    this.command = Command.Autorelease;
+    const cliOptions = yargs(args)
+      .env('RELEASE')
+      .command('release', 'Release a new version', {}, () => (this.command = Command.Release))
+      .command('autorelease', '(default) Release a new version if package version changed',
+        {}, () => (this.command = Command.Autorelease))
+      .options(options)
+      .global(Object.keys(options))
+      .help('help')
+      .argv;
 
-
+    this.options = Object.assign({}, AutomatedRelease.defaultOptions, cliOptions);
   }
 
   getPackageJson() {
@@ -21,7 +42,7 @@ export default class AutomatedRelease {
           reject(`Unable to read ${path}: ${err.message}`);
         } else {
           try {
-            resolve(JSON.parse(results));
+            resolve((this.package = JSON.parse(results)));
           } catch (e) {
             reject(`Unable to parse package.json ${e.message}`);
           }
@@ -38,7 +59,7 @@ export default class AutomatedRelease {
     return axios.get(`http://registry.npmjs.org/-/package/${packageName}/dist-tags`)
       .catch(err => {
         throw new Error(`Unable to get package dist tags: ${err.message}`);
-      })
+      });
   }
 
   isPublished(packageName) {
@@ -47,10 +68,10 @@ export default class AutomatedRelease {
       .catch(err => {
         if (err.message.match(/Unable to get package dist tags/)) {
           return false;
-        } else {
-          throw err;
         }
-      })
+
+        throw err;
+      });
   }
 
   shouldRelease() {
@@ -67,16 +88,15 @@ export default class AutomatedRelease {
   }
 
   release() {
-    return tasks.release({
+    return tasks.release(Object.assign(this.options, {
       package: this.package,
-    })
+    }));
   }
 
   autorelease() {
     return this.shouldRelease()
       .then(shouldRelease => {
-        console.log('Should release:', shouldRelease);
-        if (true || shouldRelease) {
+        if (shouldRelease) {
           return this.release();
         }
 
@@ -84,19 +104,17 @@ export default class AutomatedRelease {
       });
   }
 
+  runCommand() {
+    if (this.command === Command.Release) {
+      return this.release();
+    }
+
+    return this.autorelease();
+  }
+
   launch() {
     return this.getPackageJson()
-      .then(pkg => this.package = pkg)
-      .then(() => this.autorelease())
-      .then(releasedVersion => {
-        if (releasedVersion) {
-          console.log(`Published version ${releasedVersion}`)
-        } else {
-          console.log('Nothing released')
-        }
-      });
-      /* .then(() => this.getDistTags(this.package.name))
-      .then(() => console.log(this.package)); */
+      .then(() => this.runCommand());
   }
 
 }
