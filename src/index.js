@@ -2,6 +2,7 @@ import { join } from 'path';
 import { readFile } from 'fs';
 import yargs from 'yargs';
 import axios from 'axios';
+import { log } from 'gulp-util';
 import * as tasks from './release/tasks';
 import options from './cli/options';
 
@@ -51,30 +52,6 @@ export default class AutomatedRelease {
     });
   }
 
-  getDistTags(packageName) {
-    if (!packageName || packageName === '') {
-      return Promise.reject('Invalid package name');
-    }
-
-    return axios.get(`http://registry.npmjs.org/-/package/${packageName}/dist-tags`)
-      .catch(err => {
-        throw new Error(`Unable to get package dist tags: ${err.message}`);
-      });
-  }
-
-  shouldRelease() {
-    return Promise.all([
-      this.isPublished(this.package.name),
-    ])
-      .then(results => results.reduce((a, b) => {
-        if (!b) {
-          return false;
-        }
-
-        return a;
-      }, true));
-  }
-
   release() {
     return tasks.release(Object.assign(this.options, {
       package: this.package,
@@ -82,13 +59,13 @@ export default class AutomatedRelease {
   }
 
   autorelease() {
-    return this.shouldRelease()
-      .then(shouldRelease => {
-        if (shouldRelease) {
-          return this.release();
+    return this.release()
+      .catch(err => {
+        if (err.message.match(/tag exists/i)) {
+          log('Tag already exits: Skipping');
+        } else {
+          throw err;
         }
-
-        return false;
       });
   }
 
