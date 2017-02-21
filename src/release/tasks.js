@@ -6,7 +6,7 @@ import git from 'gulp-git';
 import { log } from 'gulp-util';
 
 function push(tags) {
-  log.info('Running git push');
+  log('Running git push');
   const args = tags ? '--tags' : '';
 
   return new Promise((resolve, reject) => {
