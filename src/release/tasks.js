@@ -1,9 +1,10 @@
+import { execFile } from 'child_process';
 import { src, dest, series } from 'gulp';
 import conventionalChangelog from 'gulp-conventional-changelog';
 import conventionalGithubReleaser from 'conventional-github-releaser';
 import streamToPromise from 'stream-to-promise';
 import git from 'gulp-git';
-import { log } from 'gulp-util';
+import { log, colors } from 'gulp-util';
 
 function push(branch, tags) {
   log('Running git push');
@@ -132,6 +133,19 @@ function githubRelease(token) {
   });
 }
 
+function runNpm(args) {
+  return new Promise((resolve, reject) => {
+    execFile('npm', args, (error, stdout) => {
+      if (error) {
+        log(colors.yellow(stdout));
+        reject(error);
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
+}
+
 export function release(options) {
   let branch;
 
@@ -150,6 +164,7 @@ export function release(options) {
     .then(() => getBranch())
     .then(b => (branch = b))
     .then(() => changelog())
+    .then(() => runNpm(['run', 'prepublish']))
     .then(() => add(options.addFiles, true))
     .then(() => checkout('head'))
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
