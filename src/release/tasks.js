@@ -117,7 +117,6 @@ export function release(options) {
   let branch;
 
   return checkStatus()
-    .then(() => getBranch())
     .then(() => new Promise((resolve, reject) => {
       log('check tag');
 
@@ -129,6 +128,7 @@ export function release(options) {
         }
       });
     }))
+    .then(() => getBranch())
     .then(b => (branch = b))
     .then(() => changelog())
     .then(() => add(options.addFiles, true))
