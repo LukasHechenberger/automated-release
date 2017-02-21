@@ -3,5 +3,5 @@ export default {
     alias: 'f',
     desc: 'Add files to release',
     type: 'array',
-  }
-}
+  },
+};
