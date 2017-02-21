@@ -1,0 +1,17 @@
+machine:
+  node:
+    version: 6.1
+  environment:
+    # Save mocha test results
+    MOCHA_FILE: "$CIRCLE_TEST_REPORTS/mocha.xml"
+
+test:
+  override:
+    # Lint files
+    - node_modules/.bin/eslint -f junit src > $CIRCLE_TEST_REPORTS/eslint.xml
+
+deployment:
+  staging:
+    branch: [master, next]
+    commands:
+      - node ./index.js --add-files out
