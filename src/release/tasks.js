@@ -41,7 +41,7 @@ function changelog() {
       }))
       .pipe(dest('./'))
   )
-    .then(() => commitFiles('./CHANGELOG.md', 'Update changelog'))
+    .then(() => commitFiles('./CHANGELOG.md', 'Update changelog [ci skip]'))
     .then(() => push());
 }
 
