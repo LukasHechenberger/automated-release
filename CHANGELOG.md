@@ -3,6 +3,11 @@
 
 
 
+<a name="0.1.9"></a>
+## [0.1.9](https://github.com/LukasHechenberger/automated-release/compare/0.1.8...v0.1.9) (2017-02-21)
+
+
+
 <a name="0.1.7"></a>
 ## [0.1.7](https://github.com/LukasHechenberger/automated-release/compare/1.3.0...v0.1.7) (2017-02-21)
 
