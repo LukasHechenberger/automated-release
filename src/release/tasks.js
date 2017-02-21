@@ -20,18 +20,17 @@ function push(branch, tags) {
   });
 }
 
-function commitFiles(branch, files, message) {
+function commitFiles(files, message) {
   log(`Committing ${files}: ${message}`);
 
   return streamToPromise(
     src(files)
       .pipe(git.add())
       .pipe(git.commit(message))
-  )
-    .then(push(branch));
+  );
 }
 
-function changelog(branch) {
+function changelog() {
   log('Creating changelog');
 
   return streamToPromise(
@@ -41,7 +40,8 @@ function changelog(branch) {
       }))
       .pipe(dest('./'))
   )
-    .then(() => commitFiles(branch, './CHANGELOG.md', 'Update changelog'));
+    .then(() => commitFiles('./CHANGELOG.md', 'Update changelog'))
+    .then(() => push());
 }
 
 export function createNewTag(version) {
@@ -113,7 +113,7 @@ export function release(options) {
   return checkStatus()
     .then(() => getBranch())
     .then(b => (branch = b))
-    .then(() => changelog(branch))
+    .then(() => changelog())
     .then(() => add(options.addFiles, true))
     .then(() => checkout('head'))
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
