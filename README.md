@@ -1,0 +1,1 @@
+# @lhechenberger/automatic-release
