@@ -86,3 +86,15 @@ export const release = series(
   createNewTag,
   cb => cb(console.log('Now, create new github release'))
 );
+
+export function checkStatus(cb) {
+  git.status({ quiet: true }, (err, out) => {
+    if (err) {
+      cb(err);
+    } else if (out.match(/working tree clean/)) {
+      cb();
+    } else {
+      cb(new Error('There are uncommitted changes'));
+    }
+  });
+}
