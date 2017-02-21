@@ -69,7 +69,7 @@ export default class AutomatedRelease {
   release() {
     return tasks.release({
       package: this.package,
-    });
+    })
   }
 
   autorelease() {
@@ -80,14 +80,21 @@ export default class AutomatedRelease {
           return this.release();
         }
 
-        console.log('Not releasing');
+        return false;
       });
   }
 
   launch() {
     return this.getPackageJson()
       .then(pkg => this.package = pkg)
-      .then(() => this.autorelease());
+      .then(() => this.autorelease())
+      .then(releasedVersion => {
+        if (releasedVersion) {
+          console.log(`Published version ${releasedVersion}`)
+        } else {
+          console.log('Nothing released')
+        }
+      });
       /* .then(() => this.getDistTags(this.package.name))
       .then(() => console.log(this.package)); */
   }
