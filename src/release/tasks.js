@@ -10,7 +10,7 @@ function push(branch, tags) {
   const args = tags ? '--tags' : '';
 
   return new Promise((resolve, reject) => {
-    git.push('origin', branch, { args }, err => {
+    git.push('origin', branch, { args, quiet: true }, err => {
       if (err) {
         reject(err);
       } else {
@@ -25,8 +25,8 @@ function commitFiles(files, message) {
 
   return streamToPromise(
     src(files)
-      .pipe(git.add())
-      .pipe(git.commit(message))
+      .pipe(git.add({ quiet: true }))
+      .pipe(git.commit(message, { quiet: true }))
   );
 }
 
@@ -50,7 +50,7 @@ export function createNewTag(version) {
 
     log(`Creating tag ${tag}`);
 
-    git.tag(tag, `[Prerelease] Add tag ${tag}`, err => {
+    git.tag(tag, `[Prerelease] Add tag ${tag}`, { quiet: true }, err => {
       if (err) {
         reject(err);
       } else {
@@ -79,13 +79,13 @@ function add(files, force) {
 
   return streamToPromise(
     src(files)
-      .pipe(git.add({ args }))
+      .pipe(git.add({ args, quiet: true }))
   );
 }
 
 function getBranch() {
   return new Promise((resolve, reject) => {
-    git.revParse({ args: '--abbrev-ref HEAD' }, (err, out) => {
+    git.revParse({ args: '--abbrev-ref HEAD', quiet: true }, (err, out) => {
       if (err) {
         reject(err);
       } else {
@@ -97,7 +97,7 @@ function getBranch() {
 
 function checkout(branch) {
   return new Promise((resolve, reject) => {
-    git.checkout(branch, err => {
+    git.checkout(branch, { quiet: true }, err => {
       if (err) {
         reject(err);
       } else {
@@ -113,7 +113,7 @@ export function release(options) {
   return checkStatus()
     .then(() => getBranch())
     .then(() => new Promise((resolve, reject) => {
-      git.revParse({ args: `v${options.package.version}` }, (err, out) => {
+      git.revParse({ args: `v${options.package.version}`, quiet: true }, err => {
         if (err) {
           resolve();
         } else {
