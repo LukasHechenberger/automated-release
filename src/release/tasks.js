@@ -122,11 +122,11 @@ function githubRelease(branch, token) {
       token,
     }, {
       preset: 'angular',
-    }, (err, data) => {
+    }, (err, results) => {
       if (err) {
         reject(err);
       } else {
-        console.log(data);
+        console.log(results);
         resolve();
       }
     });
