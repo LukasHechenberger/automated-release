@@ -13,7 +13,7 @@
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.23.0",
-    "babel-preset-node7": "^1.5.0",
+    "babel-preset-node6": "^11.0.0",
     "eslint": "^3.16.0",
     "eslint-config-lsage": "^0.1.0"
   },
@@ -29,7 +29,7 @@
   },
   "babel": {
     "presets": [
-      "node7"
+      "node6"
     ]
   },
   "eslintConfig": {
