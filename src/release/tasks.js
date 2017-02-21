@@ -100,11 +100,11 @@ function getBranch() {
   });
 }
 
-function checkout(branch, create = false) {
+function checkout(branch) {
   log(`Checkout to ${branch} branch`);
 
   return new Promise((resolve, reject) => {
-    git.checkout(branch, { args: create ? '-b' : '', quiet: true }, err => {
+    git.checkout(branch, { quiet: true }, err => {
       if (err) {
         reject(err);
       } else {
@@ -166,20 +166,10 @@ export function release(options) {
     .then(() => changelog())
     .then(() => runNpm(['run', 'prepublish']))
     .then(() => add(options.addFiles, true))
-    .then(() => checkout('release', true))
+    .then(() => checkout('HEAD'))
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
     .then(() => createNewTag(options.package.version))
     .then(() => checkout(branch))
-    // Remove release branch
-    .then(() => new Promise((resolve, reject) => {
-      git.branch('release', { args: '-d', quiet: true }, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    }))
     .then(() => push(branch, true))
     .then(() => {
       if (branch === 'master') {
