@@ -1,7 +1,6 @@
 import { join } from 'path';
 import { readFile } from 'fs';
 import yargs from 'yargs';
-import axios from 'axios';
 import { log } from 'gulp-util';
 import * as tasks from './release/tasks';
 import options from './cli/options';

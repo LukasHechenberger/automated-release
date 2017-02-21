@@ -1,5 +1,5 @@
 import { execFile } from 'child_process';
-import { src, dest, series } from 'gulp';
+import { src, dest } from 'gulp';
 import conventionalChangelog from 'gulp-conventional-changelog';
 import conventionalGithubReleaser from 'conventional-github-releaser';
 import streamToPromise from 'stream-to-promise';
@@ -123,7 +123,7 @@ function githubRelease(token) {
       token,
     }, {
       preset: 'angular',
-    }, (err, results) => {
+    }, err => {
       if (err) {
         reject(err);
       } else {
