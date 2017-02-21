@@ -7,6 +7,7 @@ import AutomatedRelease from '../index';
   .launch()
   .catch(err => {
     log(colors.red(`${err.constructor.name}: ${err}`));
+    log(colors.grey(err.stack));
 
     process.exit(1);
   });
