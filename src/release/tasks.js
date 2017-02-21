@@ -115,12 +115,9 @@ export function release(options) {
     .then(() => new Promise((resolve, reject) => {
       git.revParse({ args: `v${options.package.version}` }, (err, out) => {
         if (err) {
-          reject(err);
-        } else if (out.length > 0) {
-          reject(new Error('Tag already exists'));
-        } else {
           resolve();
         } else {
+          reject(new Error('Tag already exists'));
         }
       });
     })
