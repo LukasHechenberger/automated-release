@@ -14,4 +14,4 @@ deployment:
   staging:
     branch: [master, next]
     commands:
-      - node ./index.js --add-files out
+      - node ./out/index.js --add-files out
