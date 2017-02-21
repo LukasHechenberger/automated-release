@@ -179,4 +179,14 @@ export function release(options) {
       log(colors.grey(`Branch is ${branch}: Skipping GitHub release`));
       return false;
     })
+    .then(() => {
+      let args = ['publish'];
+
+      if (branch !== 'master') {
+        log(colors.grey('Publishing with tag', branch));
+        args = args.concat(['--tag', branch]);
+      }
+
+      return runNpm(args);
+    });
 }
