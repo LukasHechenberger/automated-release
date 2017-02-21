@@ -15,7 +15,7 @@ export function bumpVersion() {
 
 export function changelog() {
   return src('./CHANGELOG.md', {
-    buffer: false
+    buffer: false,
   })
     .pipe(conventionalChangelog({
       preset: 'angular' // Or to any other commit message convention you use.
@@ -78,19 +78,6 @@ export function createReleaseTag() {
     .then(() => gitPush(true))
 }
 
-
-export function release(options) {
-  return checkStatus();
-  /*return series(
-    /*bumpVersion,
-    changelog,
-    commitChanges,
-    pushChanges,
-    createNewTag, *
-    cb => cb(console.log('Now, create new github release'))
-  )(); */
-}
-
 function checkStatus() {
   return new Promise((resolve, reject) => {
     git.status({ quiet: true }, (err, out) => {
@@ -103,4 +90,9 @@ function checkStatus() {
       }
     });
   });
+}
+
+export function release(options) {
+  return checkStatus()
+    .then(() => add(options.addFiles));
 }
