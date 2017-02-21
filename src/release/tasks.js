@@ -129,8 +129,9 @@ export function release(options) {
     .then(() => checkout('head'))
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
     .then(() => createNewTag(options.package.version))
+    .then(() => console.log('checkout', branch))
     .then(() => checkout(branch))
+    .then(() => console.log('push', branch))
     .then(() => push(branch, true))
     .then(() => console.log('Publish for branch', branch));
-    // .then(() => add(options.addFiles));
 }
