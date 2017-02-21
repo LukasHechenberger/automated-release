@@ -113,11 +113,13 @@ export function release(options) {
   return checkStatus()
     .then(() => getBranch())
     .then(() => new Promise((resolve, reject) => {
-      git.revParse({ args: `v${options.package.version}`, quiet: true }, err => {
+      git.tag({ args: `-l v${options.package.version}`, quiet: true }, (err, out) => {
         if (err) {
-          resolve();
-        } else {
+          reject(err);
+        } else if (out.trim().length > 0) {
           reject(new Error('Tag already exists'));
+        } else {
+          resolve();
         }
       });
     })
