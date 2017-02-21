@@ -170,18 +170,16 @@ export function release(options) {
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
     .then(() => createNewTag(options.package.version))
     .then(() => checkout(branch))
-    .then(() => {
-      // Remove release branch
-      return new Promise((resolve, reject) => {
-        git.branch('release', { args: '-d', quiet: true }, err => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        })
+    // Remove release branch
+    .then(() => new Promise((resolve, reject) => {
+      git.branch('release', { args: '-d', quiet: true }, err => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
       });
-    })
+    }))
     .then(() => push(branch, true))
     .then(() => {
       if (branch === 'master') {
