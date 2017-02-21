@@ -5,12 +5,12 @@ import streamToPromise from 'stream-to-promise';
 import git from 'gulp-git';
 import { log } from 'gulp-util';
 
-function push(tags) {
+function push(branch, tags) {
   log('Running git push');
   const args = tags ? '--tags' : '';
 
   return new Promise((resolve, reject) => {
-    git.push({ args }, err => {
+    git.push('origin', branch, { args }, err => {
       if (err) {
         reject(err);
       } else {
@@ -28,10 +28,10 @@ function commitFiles(files, message) {
       .pipe(git.add())
       .pipe(git.commit(message))
   )
-    .then(push());
+    .then(push(branch));
 }
 
-function changelog() {
+function changelog(branch) {
   log('Creating changelog');
 
   return streamToPromise(
@@ -41,7 +41,7 @@ function changelog() {
       }))
       .pipe(dest('./'))
   )
-    .then(() => commitFiles('./CHANGELOG.md', 'Update changelog'));
+    .then(() => commitFiles(branch, './CHANGELOG.md', 'Update changelog'));
 }
 
 export function createNewTag(version) {
@@ -113,13 +113,13 @@ export function release(options) {
   return checkStatus()
     .then(() => getBranch())
     .then(b => (branch = b))
-    .then(() => changelog())
+    .then(() => changelog(branch))
     .then(() => add(options.addFiles, true))
     .then(() => checkout('head'))
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
     .then(() => createNewTag(options.package.version))
-    .then(() => checkout('master'))
-    .then(() => push(true))
+    .then(() => checkout(branch))
+    .then(() => push(branch, true))
     .then(() => console.log('Publish for branch', branch));
     // .then(() => add(options.addFiles));
 }
