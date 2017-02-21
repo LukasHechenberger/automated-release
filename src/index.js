@@ -2,7 +2,7 @@ import { join } from 'path';
 import { readFile } from 'fs';
 import yargs from 'yargs';
 import axios from 'axios';
-import * as tasks from './Gulpfile.babel';
+import * as tasks from './tasks';
 
 export default class AutomatedRelease {
 
@@ -67,7 +67,9 @@ export default class AutomatedRelease {
   }
 
   release() {
-    return tasks.release();
+    return tasks.release({
+      package: this.package,
+    });
   }
 
   autorelease() {
@@ -85,7 +87,7 @@ export default class AutomatedRelease {
   launch() {
     return this.getPackageJson()
       .then(pkg => this.package = pkg)
-      .then(() => this.autorelease())
+      .then(() => this.autorelease());
       /* .then(() => this.getDistTags(this.package.name))
       .then(() => console.log(this.package)); */
   }

@@ -78,14 +78,16 @@ export function createReleaseTag() {
     .then(() => gitPush(true))
 }
 
-export const release = series(
-  bumpVersion,
-  changelog,
-  commitChanges,
-  pushChanges,
-  createNewTag,
-  cb => cb(console.log('Now, create new github release'))
-);
+export const release = options => {
+  return series(
+    bumpVersion,
+    changelog,
+    commitChanges,
+    pushChanges,
+    createNewTag,
+    cb => cb(console.log('Now, create new github release'))
+  )();
+};
 
 export function checkStatus(cb) {
   git.status({ quiet: true }, (err, out) => {
