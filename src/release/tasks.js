@@ -61,7 +61,7 @@ export function createNewTag(version) {
 }
 
 function checkStatus() {
-  log('check status');
+  log('Checking status');
 
   return new Promise((resolve, reject) => {
     git.status({ quiet: true }, (err, out) => {
@@ -77,7 +77,7 @@ function checkStatus() {
 }
 
 function add(files, force) {
-  log('add', files);
+  log('Adding', files);
 
   const args = force ? '-f' : '';
 
@@ -100,7 +100,7 @@ function getBranch() {
 }
 
 function checkout(branch) {
-  log(`chckout ${branch}`);
+  log(`Checkout to ${branch} branch`);
 
   return new Promise((resolve, reject) => {
     git.checkout(branch, { quiet: true }, err => {
