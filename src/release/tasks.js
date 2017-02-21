@@ -120,7 +120,15 @@ export function release(options) {
     .then(() => getBranch())
     .then(() => new Promise((resolve, reject) => {
       log('check tag');
-      git.tag({ args: ['-l', `v${options.package.version}`], quiet: true }, (err, out) => {
+      git.revParse({ args: `v${options.package.version}`, quiet: true }, (err, out) => {
+        if (err) {
+          reject(err);
+        } else {
+          reject(new Error('found'));
+        }
+      });
+
+      /* git.tag({ args: ['-l', `v${options.package.version}`], quiet: true }, (err, out) => {
         if (err) {
           reject(err);
         } else if (out.trim().length > 0) {
@@ -128,7 +136,7 @@ export function release(options) {
         } else {
           resolve();
         }
-      });
+      }); */
     }))
     .then(b => (branch = b))
     .then(() => changelog())
