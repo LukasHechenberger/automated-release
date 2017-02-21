@@ -1,6 +1,7 @@
 import { src, dest, series } from 'gulp';
 import conventionalChangelog from 'gulp-conventional-changelog';
 import conventionalGithubReleaser from 'conventional-github-releaser';
+import streamToPromise from 'stream-to-promise';
 import bump from 'gulp-bump';
 import git from 'gulp-git';
 import { log } from 'gulp-util';
@@ -14,13 +15,13 @@ export function bumpVersion() {
 }
 
 export function changelog() {
-  return src('./CHANGELOG.md', {
-    buffer: false,
-  })
-    .pipe(conventionalChangelog({
-      preset: 'angular' // Or to any other commit message convention you use.
-    }))
-    .pipe(debug())
+  return streamToPromise(
+    src('./CHANGELOG.md', { buffer: false })
+      .pipe(conventionalChangelog({
+        preset: 'angular', // Or to any other commit message convention you use.
+      }))
+      .pipe(dest('./GENERATED'))
+  );
     // .pipe(dest('./'));
 }
 
@@ -106,5 +107,5 @@ function add(files) {
 
 export function release(options) {
   return checkStatus()
-    .then(() => add(options.addFiles));
+    .then(() => changelog());
 }
