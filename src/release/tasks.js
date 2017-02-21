@@ -68,7 +68,7 @@ function checkStatus() {
       } else if (out.match(/working tree clean/)) {
         resolve();
       } else {
-        // FIXME: Uncomment
+        reject(new Error('There are uncommitted changes'));
       }
     });
   });
