@@ -46,7 +46,7 @@ function changelog() {
 
 export function createNewTag(version) {
   return new Promise((resolve, reject) => {
-    const tag = `v${version}`;
+    const tag = version;
 
     log(`Creating tag ${tag}`);
 
