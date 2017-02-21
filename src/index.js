@@ -62,18 +62,6 @@ export default class AutomatedRelease {
       });
   }
 
-  isPublished(packageName) {
-    return this.getDistTags(packageName)
-      .then(() => true)
-      .catch(err => {
-        if (err.message.match(/Unable to get package dist tags/)) {
-          return false;
-        }
-
-        throw err;
-      });
-  }
-
   shouldRelease() {
     return Promise.all([
       this.isPublished(this.package.name),
