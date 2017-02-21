@@ -21,6 +21,8 @@ function push(tags) {
 }
 
 function commitFiles(files, message) {
+  log(`Committing ${files}: ${message}`);
+
   return streamToPromise(
     src(files)
       .pipe(git.add())
@@ -30,6 +32,8 @@ function commitFiles(files, message) {
 }
 
 function changelog() {
+  log('Creating changelog');
+
   return streamToPromise(
     src('./CHANGELOG.md', { buffer: false })
       .pipe(conventionalChangelog({
@@ -43,6 +47,8 @@ function changelog() {
 export function createNewTag(version) {
   return new Promise((resolve, reject) => {
     const tag = `v${version}`;
+
+    log(`Creating tag ${tag}`);
 
     git.tag(tag, `[Prerelease] Add tag ${tag}`, err => {
       if (err) {
