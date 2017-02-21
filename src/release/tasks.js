@@ -112,6 +112,17 @@ export function release(options) {
 
   return checkStatus()
     .then(() => getBranch())
+    .then(() => new Promise((resolve, reject) => {
+      git.revParse({ args: 'v0.1.0' }, (err, out) => {
+        if (err) {
+          reject(err);
+        } else if (out.length > 0) {
+          reject(new Error('Tag already exists'));
+        } else {
+          resolve();
+        }
+      });
+    })
     .then(b => (branch = b))
     .then(() => changelog())
     .then(() => add(options.addFiles, true))
