@@ -78,25 +78,29 @@ export function createReleaseTag() {
     .then(() => gitPush(true))
 }
 
-export const release = options => {
-  return series(
-    bumpVersion,
+
+export function release(options) {
+  return checkStatus();
+  /*return series(
+    /*bumpVersion,
     changelog,
     commitChanges,
     pushChanges,
-    createNewTag,
+    createNewTag, *
     cb => cb(console.log('Now, create new github release'))
-  )();
-};
+  )(); */
+}
 
-export function checkStatus(cb) {
-  git.status({ quiet: true }, (err, out) => {
-    if (err) {
-      cb(err);
-    } else if (out.match(/working tree clean/)) {
-      cb();
-    } else {
-      cb(new Error('There are uncommitted changes'));
-    }
+function checkStatus() {
+  return new Promise((resolve, reject) => {
+    git.status({ quiet: true }, (err, out) => {
+      if (err) {
+        reject(err);
+      } else if (out.match(/working tree clean/)) {
+        resolve();
+      } else {
+        reject(new Error('There are uncommitted changes'));
+      }
+    });
   });
 }
