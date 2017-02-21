@@ -9,6 +9,17 @@
 
 
 
+<a name="0.1.8"></a>
+## [0.1.8](https://github.com/LukasHechenberger/automated-release/compare/1.3.0...v0.1.8) (2017-02-21)
+
+
+### Features
+
+* **generator:** Run `npm publish` ([b74ce69](https://github.com/LukasHechenberger/automated-release/commit/b74ce69))
+* **generator:** run `npm run prepublish` before creating tags ([b83ff20](https://github.com/LukasHechenberger/automated-release/commit/b83ff20))
+
+
+
 <a name="0.1.7"></a>
 ## [0.1.7](https://github.com/LukasHechenberger/automated-release/compare/1.3.0...v0.1.7) (2017-02-21)
 
