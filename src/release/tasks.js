@@ -166,7 +166,7 @@ export function release(options) {
     .then(() => changelog())
     .then(() => runNpm(['run', 'prepublish']))
     .then(() => add(options.addFiles, true))
-    .then(() => checkout('head'))
+    .then(() => checkout('HEAD'))
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
     .then(() => createNewTag(options.package.version))
     .then(() => checkout(branch))
