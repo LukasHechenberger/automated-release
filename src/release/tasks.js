@@ -113,7 +113,7 @@ function checkout(branch) {
   });
 }
 
-function githubRelease(branch, token) {
+function githubRelease(token) {
   log('Creating GitHub release');
 
   return new Promise((resolve, reject) => {
@@ -126,7 +126,6 @@ function githubRelease(branch, token) {
       if (err) {
         reject(err);
       } else {
-        console.log(results);
         resolve();
       }
     });
@@ -157,6 +156,12 @@ export function release(options) {
     .then(() => createNewTag(options.package.version))
     .then(() => checkout(branch))
     .then(() => push(branch, true))
-    .then(() => githubRelease(branch, options.githubToken))
-    .then(() => console.log('Publish for branch', branch));
+    .then(() => {
+      if (branch === 'master') {
+        return githubRelease(options.githubToken);
+      }
+
+      log(colors.grey(`Branch is ${branch}: Skipping GitHub release`));
+      return false;
+    })
 }
