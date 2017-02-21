@@ -104,7 +104,7 @@ function checkout(branch) {
   log(`Checkout to ${branch} branch`);
 
   return new Promise((resolve, reject) => {
-    git.checkout(branch, { quiet: true }, err => {
+    git.checkout(branch, { args: '-b', quiet: true }, err => {
       if (err) {
         reject(err);
       } else {
@@ -166,7 +166,7 @@ export function release(options) {
     .then(() => changelog())
     .then(() => runNpm(['run', 'prepublish']))
     .then(() => add(options.addFiles, true))
-    .then(() => checkout('HEAD'))
+    .then(() => checkout('release'))
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
     .then(() => createNewTag(options.package.version))
     .then(() => checkout(branch))
