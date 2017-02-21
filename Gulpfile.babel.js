@@ -6,14 +6,14 @@ import git from 'gulp-git';
 import { log } from 'gulp-util';
 import debug from 'gulp-debug';
 
-function bumpVersion() {
+export function bumpVersion() {
   return src('./*(bower|package).json')
     .pipe(debug())
     .pipe(bump({ type: 'patch' }).on('error', log))
     .pipe(dest('./'));
 }
 
-function changelog() {
+export function changelog() {
   return src('./CHANGELOG.md', {
     buffer: false
   })
@@ -24,18 +24,18 @@ function changelog() {
     // .pipe(dest('./'));
 }
 
-function commitChanges() {
+export function commitChanges() {
   return src('.')
     .pipe(git.add())
     .pipe(git.commit('[Prerelease] Bumped version number'))
 }
 
-function pushChanges(cb) {
+export function pushChanges(cb) {
   console.log("git.push('origin', 'master', cb);");
   cb();
 }
 
-function getPackageJsonVersion () {
+export function getPackageJsonVersion () {
   return new Promise((resolve, reject) => {
     fs.readFile('./package.json', 'utf8', (err, results) => {
       if (err) {
@@ -51,7 +51,7 @@ function getPackageJsonVersion () {
   });
 }
 
-function createNewTag(version) {
+export function createNewTag(version) {
   return new Promise((resolve, reject) => {
     const tag = `v${version}`;
 
@@ -65,14 +65,14 @@ function createNewTag(version) {
   });
 }
 
-function gitPush(tags) {
+export function gitPush(tags) {
   return new Promise((resolve, reject) => {
     console.log('Run git push origin master', (tags ? '--tags' : ''));
     resolve();
   });
 }
 
-function createReleaseTag() {
+export function createReleaseTag() {
   return getPackageJsonVersion()
     .then(createNewTag)
     .then(() => gitPush(true))
