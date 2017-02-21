@@ -24,13 +24,16 @@
     "gulp-git": "^2.0.0",
     "gulp-util": "^3.0.8"
   },
+  "dependencies": {
+    "axios": "^0.15.3",
+    "yargs": "^6.6.0"
+  },
   "babel": {
     "presets": [
       "node7"
     ]
   },
-  "dependencies": {
-    "axios": "^0.15.3",
-    "yargs": "^6.6.0"
+  "eslintConfig": {
+    "extends": "lsage"
   }
 }
