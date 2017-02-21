@@ -119,6 +119,7 @@ export function release(options) {
   return checkStatus()
     .then(() => getBranch())
     .then(() => new Promise((resolve, reject) => {
+      log('check tag');
       git.tag({ args: ['-l', `v${options.package.version}`], quiet: true }, (err, out) => {
         if (err) {
           reject(err);
