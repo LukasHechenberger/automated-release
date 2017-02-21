@@ -180,7 +180,8 @@ export function release(options) {
       return false;
     })
     .then(() => {
-      let args = ['publish'];
+      // TODO: Make optional
+      let args = ['publish', '--access', 'public'];
 
       if (branch !== 'master') {
         log(colors.grey('Publishing with tag', branch));
