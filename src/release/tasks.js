@@ -92,6 +92,18 @@ function checkStatus() {
   });
 }
 
+function add(files) {
+  return new Promise((resolve, reject) => {
+    git.add(files, err => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 export function release(options) {
   return checkStatus()
     .then(() => add(options.addFiles));
