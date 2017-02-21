@@ -6,6 +6,6 @@ import AutomatedRelease from '../index';
 (new AutomatedRelease(process.argv.slice(2)))
   .launch()
   .catch(err => {
-    log.warn(colors.red(`${err.constructor.name}: ${err.message}`));
+    log(colors.red(`${err.constructor.name}: ${err}`));
     process.exit(1);
   });
