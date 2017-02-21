@@ -124,7 +124,7 @@ export function release(options) {
         if (err) {
           resolve();
         } else {
-          reject(new Error('found'));
+          reject(new Error('Tag already exists'));
         }
       });
     }))
