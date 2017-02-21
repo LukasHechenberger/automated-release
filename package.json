@@ -1,7 +1,7 @@
 {
   "name": "@lhechenberger/automated-release",
   "version": "0.1.7",
-  "description": "",
+  "description": "Automatic changelog and GitHub release generator, npm publisher",
   "main": "index.js",
   "scripts": {
     "compile": "babel src --out-dir out",
