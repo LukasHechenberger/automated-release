@@ -1,3 +1,13 @@
+<a name="0.1.2"></a>
+## [0.1.2](https://github.com/LukasHechenberger/automated-release/compare/0.1.1...v0.1.2) (2017-02-21)
+
+
+### Features
+
+* **generator:** Create GitHub release ([20da4a7](https://github.com/LukasHechenberger/automated-release/commit/20da4a7))
+
+
+
 <a name="0.1.2-alpha.1"></a>
 ## [0.1.2-alpha.1](https://github.com/LukasHechenberger/automated-release/compare/0.1.1...v0.1.2-alpha.1) (2017-02-21)
 
