@@ -51,7 +51,7 @@ export function createNewTag(version) {
 
     log(`Creating tag ${tag}`);
 
-    git.tag(tag, `[Prerelease] Add tag ${tag}`, { quiet: true }, err => {
+    git.tag(tag, `Add tag ${tag} [ci skip]`, { quiet: true }, err => {
       if (err) {
         reject(err);
       } else {
@@ -167,7 +167,7 @@ export function release(options) {
     .then(() => runNpm(['run', 'prepublish']))
     .then(() => add(options.addFiles, true))
     .then(() => checkout('HEAD'))
-    .then(() => commitFiles('.', `Version ${options.package.version} for distribution`))
+    .then(() => commitFiles('.', `Version ${options.package.version} for distribution [ci skip]`))
     .then(() => createNewTag(options.package.version))
     .then(() => checkout(branch))
     .then(() => push(branch, true))
