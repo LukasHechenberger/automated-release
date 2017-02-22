@@ -3,36 +3,60 @@ import { src, dest } from 'gulp';
 import conventionalChangelog from 'gulp-conventional-changelog';
 import conventionalGithubReleaser from 'conventional-github-releaser';
 import streamToPromise from 'stream-to-promise';
-import git from 'gulp-git';
 import { head as get } from 'axios';
 import { log, colors } from 'gulp-util';
 
-function push(branch, tags) {
-  log('Running git push');
-  const args = tags ? '--tags' : '';
-
+export function runNpm(args) {
   return new Promise((resolve, reject) => {
-    git.push('origin', branch, { args, quiet: true }, err => {
-      if (err) {
-        reject(err);
+    log('Running npm', args.join(' '));
+
+    execFile('npm', args, (error, stdout) => {
+      if (error) {
+        log(colors.yellow(stdout));
+        reject(error);
       } else {
-        resolve();
+        resolve(stdout);
       }
     });
   });
 }
 
-function commitFiles(files, message) {
-  log(`Committing ${files}: ${message}`);
+export function runGit(args) {
+  return new Promise((resolve, reject) => {
+    log('Running git', args.join(' '));
 
-  return streamToPromise(
-    src(files)
-      .pipe(git.add({ quiet: true }))
-      .pipe(git.commit(message, { quiet: true }))
-  );
+    execFile('git', args, (error, stdout) => {
+      if (error) {
+        log(colors.yellow(stdout));
+        reject(error);
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
 }
 
-function changelog(branch) {
+function add(files, force) {
+  const args = ['add'].concat(files);
+
+  return runGit(force ? args.concat('-f') : args);
+}
+
+function commit(message) {
+  return runGit(['commit', '-m', message]);
+}
+
+function push(tags) {
+  const args = ['push'];
+
+  return runGit(tags ? args.concat(['--tags']) : args);
+}
+
+function checkout(branch) {
+  return runGit(['checkout', branch]);
+}
+
+function changelog() {
   log('Creating changelog');
 
   return streamToPromise(
@@ -42,77 +66,21 @@ function changelog(branch) {
       }))
       .pipe(dest('./'))
   )
-    .then(() => commitFiles('./CHANGELOG.md', 'Update changelog [ci skip]'))
-    .then(() => push(branch));
-}
-
-export function createNewTag(version) {
-  return new Promise((resolve, reject) => {
-    const tag = version;
-
-    log(`Creating tag ${tag}`);
-
-    git.tag(tag, `Add tag ${tag} [ci skip]`, { quiet: true }, err => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(tag);
-      }
-    });
-  });
+    .then(() => add(['CHANGELOG.md']))
+    .then(() => commit('Update changelog [ci skip]')
+    .then(() => push()));
 }
 
 function checkStatus() {
   log('Checking status');
 
-  return new Promise((resolve, reject) => {
-    git.status({ quiet: true }, (err, out) => {
-      if (err) {
-        reject(err);
-      } else if (out.match(/working tree clean/)) {
-        resolve();
-      } else {
-        reject(new Error('There are uncommitted changes'));
-      }
-    });
-  });
-}
-
-function add(files, force) {
-  log('Adding', files);
-
-  const args = force ? '-f' : '';
-
-  return streamToPromise(
-    src(files)
-      .pipe(git.add({ args, quiet: true }))
-  );
+  return runGit(['status'])
+    .then(out => Boolean(out.match(/working tree clean/)));
 }
 
 function getBranch() {
-  return new Promise((resolve, reject) => {
-    git.revParse({ args: '--abbrev-ref HEAD', quiet: true }, (err, out) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(out);
-      }
-    });
-  });
-}
-
-function checkout(branch) {
-  log(`Checkout to ${branch} branch`);
-
-  return new Promise((resolve, reject) => {
-    git.checkout(branch, { quiet: true }, err => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
+  return runGit(['rev-parse', '--abbrev-ref', 'HEAD'])
+    .then(out => out.trim());
 }
 
 function githubRelease(token) {
@@ -134,17 +102,17 @@ function githubRelease(token) {
   });
 }
 
-function runNpm(args) {
-  return new Promise((resolve, reject) => {
-    execFile('npm', args, (error, stdout) => {
-      if (error) {
-        log(colors.yellow(stdout));
-        reject(error);
-      } else {
-        resolve(stdout);
-      }
-    });
-  });
+function npmPublish(branch) {
+  log('Running npm publish');
+  // TODO: Make optional
+  let args = ['publish', '--access', 'public'];
+
+  if (branch !== 'master') {
+    log(colors.grey('Publishing with tag', branch));
+    args = args.concat(['--tag', branch]);
+  }
+
+  return runNpm(args);
 }
 
 function checkIfTagExists(options) {
@@ -175,32 +143,21 @@ export function release(options) {
     .then(() => checkIfTagExists(options))
     .then(() => getBranch())
     .then(b => log('On', (branch = b), 'branch'))
-    .then(() => changelog(branch))
-    .then(() => add(options.addFiles, true))
+    .then(() => changelog())
+    .then(() => add(options.addFiles, true)
     .then(() => checkout('HEAD'))
-    .then(() => commitFiles('.', `Version ${options.package.version} for distribution [ci skip]`))
-    .then(() => createNewTag(options.package.version))
+    .then(() => commit(`"Version ${options.package.version} for release [ci skip]"`)))
+    .then(() => runGit(['tag', '-a', options.package.version,
+      '-m', `"Add tag ${options.package.version} [ci skip]"`]))
     .then(() => checkout(branch))
-    .then(() => push(branch, true))
+    .then(() => push(true))
     .then(() => {
       if (branch === 'master') {
         return githubRelease(options.githubToken);
       }
 
-      log(colors.grey(`Branch is ${branch}: Skipping GitHub release`));
+      log(colors.grey(`On ${branch} branch: Skipping GitHub release`));
       return false;
     })
-    .then(() => {
-      log('Running npm publish');
-      // TODO: Make optional
-      let args = ['publish', '--access', 'public'];
-
-      if (branch !== 'master') {
-        log(colors.grey('Publishing with tag', branch));
-        args = args.concat(['--tag', branch]);
-      }
-
-      return runNpm(args);
-    })
-    .then(() => log('Done'));
+    .then(() => npmPublish(branch));
 }
