@@ -60,8 +60,8 @@ export default class AutomatedRelease {
   autorelease() {
     return this.release()
       .catch(err => {
-        if (err.message.match(/tag exists/i)) {
-          log('Tag already exits: Skipping');
+        if (err.message.match(/tag already exists/i)) {
+          log('Tag already exits: Skipping release');
         } else {
           throw err;
         }
