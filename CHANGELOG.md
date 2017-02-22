@@ -1,3 +1,13 @@
+<a name="0.1.19"></a>
+## [0.1.19](https://github.com/LukasHechenberger/automated-release/compare/0.1.16...v0.1.19) (2017-02-22)
+
+
+### Features
+
+* **generator:** Run npm prepublish ([629a898](https://github.com/LukasHechenberger/automated-release/commit/629a898))
+
+
+
 <a name="0.1.18"></a>
 ## [0.1.18](https://github.com/LukasHechenberger/automated-release/compare/0.1.16...v0.1.18) (2017-02-22)
 
