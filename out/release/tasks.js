@@ -155,7 +155,8 @@ function checkIfTagExists(options) {
 function release(options) {
   let branch;
 
-  return checkStatus().then(() => checkIfTagExists(options)).then(() => getBranch()).then(b => (0, _gulpUtil.log)('On', branch = b, 'branch')).then(() => changelog()).then(() => add(options.addFiles, true).then(() => checkout('HEAD')).then(() => commit(`"Version ${options.package.version} for release [ci skip]"`))).then(() => runGit(['tag', '-a', options.package.version, '-m', `"Add tag ${options.package.version} [ci skip]"`])).then(() => checkout(branch)).then(() => push(true)).then(() => {
+  return Promise.resolve() // checkStatus()
+  .then(() => checkIfTagExists(options)).then(() => getBranch()).then(b => (0, _gulpUtil.log)('On', branch = b, 'branch')).then(() => changelog()).then(() => add(options.addFiles, true).then(() => checkout('HEAD')).then(() => commit(`"Version ${options.package.version} for release [ci skip]"`))).then(() => runGit(['tag', '-a', options.package.version, '-m', `"Add tag ${options.package.version} [ci skip]"`])).then(() => checkout(branch)).then(() => push(true)).then(() => {
     if (branch === 'master') {
       return githubRelease(options.githubToken);
     }
