@@ -32,7 +32,7 @@ function commitFiles(files, message) {
   );
 }
 
-function changelog() {
+function changelog(branch) {
   log('Creating changelog');
 
   return streamToPromise(
@@ -43,7 +43,7 @@ function changelog() {
       .pipe(dest('./'))
   )
     .then(() => commitFiles('./CHANGELOG.md', 'Update changelog [ci skip]'))
-    .then(() => push());
+    .then(() => push(branch));
 }
 
 export function createNewTag(version) {
@@ -172,21 +172,10 @@ export function release(options) {
   let branch;
 
   return checkStatus()
-    .then(() => new Promise((resolve, reject) => {
-      log('check tag');
-
-      git.revParse({ args: `v${options.package.version}`, quiet: true }, err => {
-        if (err) {
-          resolve();
-        } else {
-          reject(new Error('Tag already exists'));
-        }
-      });
-    }))
+    .then(() => checkIfTagExists(options))
     .then(() => getBranch())
-    .then(b => (branch = b))
-    .then(() => changelog())
-    .then(() => runNpm(['run', 'prepublish']))
+    .then(b => log('On', (branch = b), 'branch'))
+    .then(() => changelog(branch))
     .then(() => add(options.addFiles, true))
     .then(() => checkout('HEAD'))
     .then(() => commitFiles('.', `Version ${options.package.version} for distribution [ci skip]`))
@@ -201,8 +190,8 @@ export function release(options) {
       log(colors.grey(`Branch is ${branch}: Skipping GitHub release`));
       return false;
     })
-    .then(() => runNpm(['run', 'prepublish']))
     .then(() => {
+      log('Running npm publish');
       // TODO: Make optional
       let args = ['publish', '--access', 'public'];
 
@@ -212,5 +201,6 @@ export function release(options) {
       }
 
       return runNpm(args);
-    });
+    })
+    .then(() => log('Done'));
 }
