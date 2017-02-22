@@ -148,6 +148,7 @@ export function release(options) {
     .then(() => getBranch())
     .then(b => log('On', (branch = b), 'branch'))
     .then(() => changelog())
+    .then(() => runNpm(['run', 'prepublish']))
     .then(() => add(options.addFiles, true)
     .then(() => checkout('HEAD'))
     .then(() => commit(`"Version ${options.package.version} for release [ci skip]"`)))
