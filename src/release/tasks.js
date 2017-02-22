@@ -179,6 +179,7 @@ export function release(options) {
       log(colors.grey(`Branch is ${branch}: Skipping GitHub release`));
       return false;
     })
+    .then(() => runNpm(['run', 'prepublish']))
     .then(() => {
       // TODO: Make optional
       let args = ['publish', '--access', 'public'];
