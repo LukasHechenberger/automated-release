@@ -4,7 +4,7 @@
   "description": "Automatic changelog and GitHub release generator, npm publisher",
   "main": "index.js",
   "bin": {
-    "automated-release": "out/bin/automated-release"
+    "automated-release": "out/bin/automated-release.js"
   },
   "scripts": {
     "compile": "babel src --out-dir out",
