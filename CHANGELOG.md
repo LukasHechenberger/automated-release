@@ -8,6 +8,16 @@
 
 
 
+<a name="0.1.12"></a>
+## [0.1.12](https://github.com/LukasHechenberger/automated-release/compare/0.1.11...v0.1.12) (2017-02-22)
+
+
+### Bug Fixes
+
+* **tasks:** Explicitly run npm prepublish script ([a159eb4](https://github.com/LukasHechenberger/automated-release/commit/a159eb4)), closes [#2](https://github.com/LukasHechenberger/automated-release/issues/2)
+
+
+
 <a name="0.1.11"></a>
 ## [0.1.11](https://github.com/LukasHechenberger/automated-release/compare/0.1.10...v0.1.11) (2017-02-22)
 
