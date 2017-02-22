@@ -75,7 +75,11 @@ function checkStatus() {
   log('Checking status');
 
   return runGit(['status'])
-    .then(out => Boolean(out.match(/working tree clean/)));
+    .then(out => {
+      if (!(out.match(/working tree clean/))) {
+        throw new Error('There are uncommitted changes');
+      }
+    });
 }
 
 function getBranch() {
