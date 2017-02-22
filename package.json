@@ -25,6 +25,7 @@
     "eslint-config-lsage": "^0.1.0"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "conventional-github-releaser": "^1.1.3",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-conventional-changelog": "^1.1.0",
