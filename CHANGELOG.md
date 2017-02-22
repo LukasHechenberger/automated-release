@@ -1,3 +1,13 @@
+<a name="0.1.10"></a>
+## [0.1.10](https://github.com/LukasHechenberger/automated-release/compare/0.1.9...v0.1.10) (2017-02-22)
+
+
+### Bug Fixes
+
+* Prevent additional build after release ([9d4ffcf](https://github.com/LukasHechenberger/automated-release/commit/9d4ffcf))
+
+
+
 <a name="0.1.9"></a>
 ## [0.1.9](https://github.com/LukasHechenberger/automated-release/compare/0.1.8...v0.1.9) (2017-02-21)
 
