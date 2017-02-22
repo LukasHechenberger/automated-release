@@ -4,6 +4,7 @@ import conventionalChangelog from 'gulp-conventional-changelog';
 import conventionalGithubReleaser from 'conventional-github-releaser';
 import streamToPromise from 'stream-to-promise';
 import git from 'gulp-git';
+import { head as get } from 'axios';
 import { log, colors } from 'gulp-util';
 
 function push(branch, tags) {
@@ -144,6 +145,27 @@ function runNpm(args) {
       }
     });
   });
+}
+
+function checkIfTagExists(options) {
+  let repoUrl;
+
+  try {
+    repoUrl = options.package.repository.url.match(/(https:.*)\.git/)[1];
+  } catch (e) {
+    return Promise.reject(new Error(`Unable to get repository URL: ${e.message}`));
+  }
+
+  return get(`${repoUrl}/releases/tag/${options.package.version}`)
+    .then(() => {
+      throw new Error('Tag already exists');
+    }, err => {
+      if (err.response.status === 404) {
+        return true;
+      }
+
+      throw err;
+    });
 }
 
 export function release(options) {
