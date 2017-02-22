@@ -1,6 +1,6 @@
 {
   "name": "@lhechenberger/automated-release",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "Automatic changelog and GitHub release generator, npm publisher",
   "main": "index.js",
   "bin": {
