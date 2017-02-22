@@ -1,3 +1,13 @@
+<a name="0.1.11"></a>
+## [0.1.11](https://github.com/LukasHechenberger/automated-release/compare/0.1.10...v0.1.11) (2017-02-22)
+
+
+### Bug Fixes
+
+* **package:** Replace invalid bin path ([292e2f4](https://github.com/LukasHechenberger/automated-release/commit/292e2f4)), closes [#1](https://github.com/LukasHechenberger/automated-release/issues/1)
+
+
+
 <a name="0.1.10"></a>
 ## [0.1.10](https://github.com/LukasHechenberger/automated-release/compare/0.1.9...v0.1.10) (2017-02-22)
 
