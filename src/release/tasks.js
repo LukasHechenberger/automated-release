@@ -151,9 +151,9 @@ export function release(options) {
     .then(() => runNpm(['run', 'prepublish']))
     .then(() => add(options.addFiles, true)
     .then(() => checkout('HEAD'))
-    .then(() => commit(`"Version ${options.package.version} for release [ci skip]"`)))
+    .then(() => commit(`Version ${options.package.version} for release [ci skip]`)))
     .then(() => runGit(['tag', '-a', options.package.version,
-      '-m', `"Add tag ${options.package.version} [ci skip]"`]))
+      '-m', `Add tag ${options.package.version} [ci skip]`]))
     .then(() => checkout(branch))
     .then(() => push(true))
     .then(() => {
