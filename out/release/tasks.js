@@ -64,7 +64,7 @@ function createNewTag(version) {
 
     (0, _gulpUtil.log)(`Creating tag ${tag}`);
 
-    _gulpGit2.default.tag(tag, `[Prerelease] Add tag ${tag}`, { quiet: true }, err => {
+    _gulpGit2.default.tag(tag, `Add tag ${tag} [ci skip]`, { quiet: true }, err => {
       if (err) {
         reject(err);
       } else {
@@ -169,7 +169,7 @@ function release(options) {
         reject(new Error('Tag already exists'));
       }
     });
-  })).then(() => getBranch()).then(b => branch = b).then(() => changelog()).then(() => runNpm(['run', 'prepublish'])).then(() => add(options.addFiles, true)).then(() => checkout('HEAD')).then(() => commitFiles('.', `Version ${options.package.version} for distribution`)).then(() => createNewTag(options.package.version)).then(() => checkout(branch)).then(() => push(branch, true)).then(() => {
+  })).then(() => getBranch()).then(b => branch = b).then(() => changelog()).then(() => runNpm(['run', 'prepublish'])).then(() => add(options.addFiles, true)).then(() => checkout('HEAD')).then(() => commitFiles('.', `Version ${options.package.version} for distribution [ci skip]`)).then(() => createNewTag(options.package.version)).then(() => checkout(branch)).then(() => push(branch, true)).then(() => {
     if (branch === 'master') {
       return githubRelease(options.githubToken);
     }
