@@ -8,7 +8,7 @@ import { log, colors } from 'gulp-util';
 
 export function runNpm(args) {
   return new Promise((resolve, reject) => {
-    log('Running npm', args.join(' '));
+    log(colors.grey('> npm', args.join(' ')));
 
     execFile('npm', args, (error, stdout) => {
       if (error) {
@@ -23,7 +23,7 @@ export function runNpm(args) {
 
 export function runGit(args) {
   return new Promise((resolve, reject) => {
-    log('Running git', args.join(' '));
+    log(colors.grey('> git', args.join(' ')));
 
     execFile('git', args, (error, stdout) => {
       if (error) {
