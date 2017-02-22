@@ -12,6 +12,10 @@
     "lint": "eslint src",
     "prepublish": "npm run compile"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LukasHechenberger/automated-release.git"
+  },
   "author": "Lukas Hechenberger <npm@ls-age.com>",
   "license": "MIT",
   "devDependencies": {
