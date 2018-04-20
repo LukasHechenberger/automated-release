@@ -1,5 +1,7 @@
 # @lhechenberger/automatic-release
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/LukasHechenberger/automated-release.svg)](https://greenkeeper.io/)
+
 > Automatic changelog and GitHub release generator, npm publisher
 
 [![CircleCI](https://circleci.com/gh/LukasHechenberger/automated-release.svg?style=svg)](https://circleci.com/gh/LukasHechenberger/automated-release)
